@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="CurrentNetworkView" Height="450" Width="800">
     <Grid>
-        
+        <TextBlock>Hello</TextBlock>
     </Grid>
 </Window>

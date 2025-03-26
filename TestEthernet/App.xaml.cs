@@ -1,6 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Windows;
+using TestEthernet.Core;
+using TestEthernet.Services;
 using TestEthernet.ViewModels;
+using TestEthernet.Views;
 
 namespace TestEthernet
 {
@@ -21,8 +25,17 @@ namespace TestEthernet
                 DataContext = provider.GetRequiredService<MainWindowViewModel>()
             });
 
+            services.AddSingleton<CurrentNetworkView>(provider => new CurrentNetworkView
+            {
+                DataContext = provider.GetRequiredService<CurrentNetworkViewModel>()
+            });
+
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<CurrentNetworkViewModel>();
+            services.AddSingleton<INavigationService, NavigationService>();
+
+            services.AddSingleton<Func<Type, ViewModel>>(serviceProvider => viewModelType
+            =>  (ViewModel)serviceProvider.GetRequiredService(viewModelType));
 
             _serviceProvider = services.BuildServiceProvider();
         }

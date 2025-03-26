@@ -1,15 +1,34 @@
 ﻿using System.ComponentModel;
+using TestEthernet.Core;
+using TestEthernet.Services;
+using TestEthernet.Views;
 
 namespace TestEthernet.ViewModels
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : ViewModel
     {
+        private INavigationService _navigation;
 
-        public MainWindowViewModel()
+        public INavigationService Navigation
         {
-            /*var networkData = NetworkInterface.GetAllNetworkInterfaces();*/
+            get => _navigation;
+            set
+                {
+                    _navigation = value;
+                    OnPropityChanged();
+                }
+
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public RelayCommand NavigateCurrentNetwork {  get; set; }
+
+
+        public MainWindowViewModel(INavigationService navService)
+        {
+            Navigation = navService;
+            NavigateCurrentNetwork = new RelayCommand(execute: (object o) => { Navigation.NavigateTo<CurrentNetworkViewModel>(); },
+            canExecute: (object o) => true);
+            /*var networkData = NetworkInterface.GetAllNetworkInterfaces();*/
+        }
     }
 }
