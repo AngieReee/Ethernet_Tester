@@ -11,6 +11,6 @@
       Title="CurrentNetworkView">
 
     <Grid>
-        <TextBlock Text="hello world"></TextBlock>
+        
     </Grid>
 </Page>

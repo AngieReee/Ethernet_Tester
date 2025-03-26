@@ -70,6 +70,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Views\CurrentNetwork.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CurrentNetworkView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -84,6 +88,9 @@
     </Compile>
     <Compile Include="ViewModels\CurrentNetworkViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Views\CurrentNetwork.xaml.cs">
+      <DependentUpon>CurrentNetwork.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CurrentNetworkView.xaml.cs">
       <DependentUpon>CurrentNetworkView.xaml</DependentUpon>
     </Compile>

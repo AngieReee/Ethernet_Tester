@@ -4,7 +4,6 @@ namespace TestEthernet.ViewModels
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        /*UserControl uc = new CurrentNetworkView();*/
 
         public MainWindowViewModel()
         {
