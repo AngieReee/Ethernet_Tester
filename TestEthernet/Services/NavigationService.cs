@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestEthernet.ViewModels
+namespace TestEthernet.Services
 {
-    internal class CurrentNetworkViewModel
+    public class NavigationService
     {
     }
 }

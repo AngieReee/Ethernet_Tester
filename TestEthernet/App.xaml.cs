@@ -1,6 +1,5 @@
-﻿using Egor92.MvvmNavigation;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
-using TestEthernet.Views;
 using TestEthernet.ViewModels;
 
 namespace TestEthernet
@@ -10,18 +9,28 @@ namespace TestEthernet
     /// </summary>
     public partial class App : Application
     {
+
+        private readonly ServiceProvider _serviceProvider;
+
+        public App()
+        {
+            IServiceCollection services = new ServiceCollection();
+
+            services.AddSingleton<MainWindow>(provider => new MainWindow
+            {
+                DataContext = provider.GetRequiredService<MainWindowViewModel>()
+            });
+
+            services.AddSingleton<MainWindowViewModel>();
+            services.AddSingleton<CurrentNetworkViewModel>();
+
+            _serviceProvider = services.BuildServiceProvider();
+        }
         protected override void OnStartup(StartupEventArgs e)
-        { 
-            var window = new MainWindow();
-            var navigationManager = new NavigationManager(window);
-            var viewModel = new MainWindow();
-            window.DataContext = viewModel;
-
-            navigationManager.Register<CurrentNetworkView>("CurrentNetworkKey", () => new CurrentNetworkViewModel(navigationManager));
-
-
-            window.Show();
-
+        {
+            var curWindow = _serviceProvider.GetRequiredService<MainWindow>();
+            curWindow.Show();
+            base.OnStartup(e);
         }
     }
 }

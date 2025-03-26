@@ -1,7 +1,11 @@
 ﻿<Application x:Class="TestEthernet.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModel="clr-namespace:TestEthernet.ViewModels"
+             xmlns:view="clr-namespace:TestEthernet.Views">
     <Application.Resources>
-         
+        <DataTemplate DataType="{x:Type TypeName=viewModel:CurrentNetworkViewModel}">
+            <view:CurrentNetworkView/>
+        </DataTemplate>
     </Application.Resources>
 </Application>

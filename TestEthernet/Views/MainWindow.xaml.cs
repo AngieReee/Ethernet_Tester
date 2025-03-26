@@ -11,7 +11,6 @@ namespace TestEthernet
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
         }
     }
 }
