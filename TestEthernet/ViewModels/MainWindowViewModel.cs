@@ -1,5 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
+using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
@@ -55,6 +58,8 @@ namespace TestEthernet.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public event NetworkAvailabilityChangedEventHandler NetworkAvailabilityChanged;
+
         private INavigationService _navigation;
 
         public INavigationService Navigation
@@ -71,7 +76,6 @@ namespace TestEthernet.ViewModels
         #endregion
 
 
-
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -79,6 +83,9 @@ namespace TestEthernet.ViewModels
 
 
 
+        /// <summary>
+        /// Метод, в котором считываются данные о текущем хосте
+        /// </summary>
         public void GetNetworkData()
         {
             Host = Dns.GetHostName();
@@ -99,7 +106,16 @@ namespace TestEthernet.ViewModels
             }
         }
 
-        public RelayCommand NavigateCurrentNetwork { get; set; }
+        public void CheckCurrentNetwork()
+        {
+            foreach ((string name, OperationalStatus status) in NetworkInterface.GetAllNetworkInterfaces().Select(networkInterface =>
+            (networkInterface.Name, networkInterface.OperationalStatus)))
+            {
+                Debug.WriteLine(
+                    $"{name} is {status}");
+            }
+        }
+
 
         public MainWindowViewModel(INavigationService navService)
         {
@@ -116,8 +132,11 @@ namespace TestEthernet.ViewModels
             {
                 OutputDescription = "Ошибка подключения сети";
             }
-
-
+            CheckCurrentNetwork();
         }
+
+        public RelayCommand NavigateCurrentNetwork { get; set; }
+
+
     }
 }
