@@ -6,43 +6,49 @@
         xmlns:local="clr-namespace:TestEthernet"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
+    <ScrollViewer>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0">
-            <!--<Button Command="{Binding NavigateCurrentNetwork}">Туда</Button>-->
-            <TextBlock>Тут будет меню</TextBlock>
+                <StackPanel Grid.Column="0">
+                    <!--<Button Command="{Binding NavigateCurrentNetwork}">Туда</Button>-->
+                    <TextBlock>Тут будет меню</TextBlock>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="{Binding StringFormat=Имя хоста: {0}, Path=Host}"></TextBlock>
+                    <TextBlock Text="{Binding Path=OutputDescription}"></TextBlock>
+                    <ListBox ItemsSource="{Binding Path=AddressData}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding }"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <TextBlock Text="{Binding Path=IpListDescription}"></TextBlock>
+                    <ListBox Grid.Column="0" ItemsSource="{Binding Path=DetectedAddresses}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding }"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+
+                <!--<ContentControl Grid.Column="1" Content="{Binding Path=Navigation.CurrentView}"></ContentControl>-->
+
+            </Grid>
         </StackPanel>
 
-        <StackPanel Grid.Column="1">
-            <TextBlock Text="{Binding StringFormat=Имя хоста: {0}, Path=Host}"></TextBlock>
-            <TextBlock Text="{Binding Path=OutputDescription}"></TextBlock>
-            <ListBox ItemsSource="{Binding Path=AddressData}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <TextBlock Text="{Binding }"></TextBlock>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <TextBlock Text="{Binding Path=IpListDescription}"></TextBlock>
-            <ListBox ItemsSource="{Binding Path=DetectedAddresses}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <TextBlock Text="{Binding }"></TextBlock>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </StackPanel>
+    </ScrollViewer>
 
-        <!--<ContentControl Grid.Column="1" Content="{Binding Path=Navigation.CurrentView}"></ContentControl>-->
-        
-    </Grid>
 
 </Window>

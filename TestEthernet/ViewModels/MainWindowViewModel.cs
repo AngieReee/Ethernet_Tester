@@ -17,7 +17,7 @@ namespace TestEthernet.ViewModels
     public class MainWindowViewModel : ViewModel
     {
 
-        #region [Переменные и их свойства]        
+        #region [Переменные и их свойства]
 
         List<IPAddress> detectedAddresses;
         public List<IPAddress> DetectedAddresses {
@@ -143,7 +143,7 @@ namespace TestEthernet.ViewModels
             string[] parts = ipV4.Split('.');
             ipV4 = parts[0] + "." + parts[1] + "." + parts[2] + ".";
             int startAddress = 1;
-            int endAddress = 50;
+            int endAddress = 255;
 
             List<IPAddress> detectedAddresses = new List<IPAddress>();
             Ping ping = new Ping();
@@ -174,11 +174,11 @@ namespace TestEthernet.ViewModels
             try
             {
                 string ipV4 = GetNetworkData();
-                OutputDescription = "Адреса хоста: ";
+                OutputDescription = "Адреса хоста:";
                 DetectedAddresses = CheckCurrentNetwork(ipV4);
                 if (detectedAddresses.Count != 0)
                 {
-                    IpListDescription = "Доступные IP адреса";
+                    IpListDescription = "Доступные IP адреса:";
                 }
                 else
                 {
@@ -189,7 +189,6 @@ namespace TestEthernet.ViewModels
             {
                 OutputDescription = "Ошибка подключения сети";
             }
-            
         }
 
         public RelayCommand NavigateCurrentNetwork { get; set; }
