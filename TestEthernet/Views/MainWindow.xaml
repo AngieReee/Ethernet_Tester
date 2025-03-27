@@ -29,6 +29,16 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            <TextBlock Text="{Binding Path=IpListDescription}"></TextBlock>
+            <ListBox ItemsSource="{Binding Path=DetectedAddresses}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding }"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </StackPanel>
 
         <!--<ContentControl Grid.Column="1" Content="{Binding Path=Navigation.CurrentView}"></ContentControl>-->
