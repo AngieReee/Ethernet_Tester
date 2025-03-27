@@ -13,10 +13,25 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Column="0">
-            <Button Command="{Binding NavigateCurrentNetwork}">Туда</Button>
+            <!--<Button Command="{Binding NavigateCurrentNetwork}">Туда</Button>-->
+            <TextBlock>Тут будет меню</TextBlock>
         </StackPanel>
 
-        <ContentControl Grid.Column="1" Content="{Binding Navigation.CurrentView}"></ContentControl>
+        <StackPanel Grid.Column="1">
+            <TextBlock Text="{Binding StringFormat=Имя хоста: {0}, Path=Host}"></TextBlock>
+            <TextBlock Text="{Binding Path=OutputDescription}"></TextBlock>
+            <ListBox ItemsSource="{Binding Path=AddressData}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding }"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+
+        <!--<ContentControl Grid.Column="1" Content="{Binding Path=Navigation.CurrentView}"></ContentControl>-->
         
     </Grid>
 
