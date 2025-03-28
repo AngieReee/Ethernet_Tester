@@ -19,6 +19,37 @@ namespace TestEthernet.ViewModels
 
         #region [Переменные и их свойства]
 
+        string startAddress;
+        public string StartAddress
+        {
+            get => startAddress;
+            set
+            {
+                startAddress = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string endAddress;
+        public string EndAddress
+        {
+            get => endAddress;
+            set
+            {
+                endAddress = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string ip;
+        public string Ip { get => ip;
+            set
+            {
+                ip = value;
+                OnPropertyChanged();
+            }
+        }
+
         string[] detectedMacs;
         public string[] DetectedMacs
         {
@@ -253,6 +284,23 @@ namespace TestEthernet.ViewModels
             return ipV4;
         }
 
+
+
+        public void GetAllData()
+        {
+            DetectedAddresses = CheckCurrentNetwork(Ip);
+            if (detectedAddresses.Count != 0)
+            {
+                IpListDescription = "";
+                DetectedHosts = GetNamesArray(detectedAddresses);
+                DetectedMacs = GetMacsArray(detectedAddresses);
+            }
+            else
+            {
+                IpListDescription = "Нет доступных IP адресов";
+            }
+        }
+
         /// <summary>
         /// Метод, который выводит доступные IP адреса
         /// </summary>
@@ -260,10 +308,14 @@ namespace TestEthernet.ViewModels
         /// <returns></returns>
         public List<IPAddress> CheckCurrentNetwork(string ipV4)
         {
-            string[] parts = ipV4.Split('.');
+            /*string[] parts = ipV4.Split('.');
             ipV4 = parts[0] + "." + parts[1] + "." + parts[2] + ".";
+
+            StartAddress = ipV4;
+            EndAddress = ipV4;*/
+
             int startAddress = 1;
-            int endAddress = 20;
+            int endAddress = 10;
 
             List<IPAddress> detectedAddresses = new List<IPAddress>();
             Ping ping = new Ping();
@@ -295,17 +347,11 @@ namespace TestEthernet.ViewModels
             {
                 string ipV4 = GetNetworkData();
                 OutputDescription = "Адреса хоста:";
-                DetectedAddresses = CheckCurrentNetwork(ipV4);
-                if (detectedAddresses.Count != 0)
-                {
-                    IpListDescription = "Доступные IP адреса:";
-                    DetectedHosts = GetNamesArray(detectedAddresses);
-                    DetectedMacs = GetMacsArray(detectedAddresses);
-                }
-                else
-                {
-                    IpListDescription = "Нет доступных IP адресов";
-                }
+                string[] parts = ipV4.Split('.');
+                Ip = parts[0] + "." + parts[1] + "." + parts[2] + ".";
+
+                StartAddress = Ip;
+                EndAddress = Ip;
             }
             catch
             {

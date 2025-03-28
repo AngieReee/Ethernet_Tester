@@ -33,6 +33,24 @@
                     </ListBox>
                     <TextBlock Text="{Binding Path=IpListDescription}"></TextBlock>
                     <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="125"></ColumnDefinition>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="15"></ColumnDefinition>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="200"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Доступные IP адреса c"></TextBlock>
+                        <TextBox Grid.Column="1" Width="90" Text="{Binding Path=StartAddress}"></TextBox>
+                        <TextBlock Grid.Column="2" Text="по" HorizontalAlignment="Left"></TextBlock>
+                        <TextBox Grid.Column="3" Width="90" Text="{Binding Path=EndAddress}"></TextBox>
+                        <Button Grid.Column="4" Margin="15 0 0 0" Command="{Binding Path=GetAllData}">Найти</Button>
+                    </Grid>
+
+
+
+                    <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="20"></RowDefinition>
                             <RowDefinition></RowDefinition>
@@ -42,7 +60,9 @@
                             <ColumnDefinition Width="250"></ColumnDefinition>
                             <ColumnDefinition Width="250"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
+                        
                         <TextBlock Grid.Row="0" Grid.Column="0">IP</TextBlock>
+                        
                         <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=DetectedAddresses}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
@@ -52,6 +72,7 @@
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
+                        
                         <TextBlock Grid.Row="0" Grid.Column="1">Имя</TextBlock>
                         <ListBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Path=DetectedHosts}">
                             <ListBox.ItemTemplate>
@@ -62,7 +83,9 @@
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
+                        
                         <TextBlock Grid.Row="0" Grid.Column="2">MAC адрес</TextBlock>
+                        
                         <ListBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding Path=DetectedMacs}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
