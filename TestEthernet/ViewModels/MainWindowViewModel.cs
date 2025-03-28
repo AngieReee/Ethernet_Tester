@@ -19,8 +19,20 @@ namespace TestEthernet.ViewModels
 
         #region [Переменные и их свойства]
 
+        string[] detectedHosts;
+        public string[] DetectedHosts
+        {
+            get => detectedHosts;
+            set
+            {
+                detectedHosts = value;
+                OnPropertyChanged();
+            }
+        }
+
         List<IPAddress> detectedAddresses;
-        public List<IPAddress> DetectedAddresses {
+        public List<IPAddress> DetectedAddresses
+        {
             get => detectedAddresses;
             set
             {
@@ -51,7 +63,7 @@ namespace TestEthernet.ViewModels
             }
         }
 
-        string[] addressData = new string[2];
+        string[] addressData;
         public string[] AddressData
         {
             get => addressData;
@@ -108,6 +120,47 @@ namespace TestEthernet.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
+        /// <summary>
+        /// Метод, вычисляющий имя хоста по IP адресу
+        /// </summary>
+        /// <param name="ipAddress">Текущий IP адрес для вычисления</param>
+        /// <returns>В зависимости от результатов вычисления метод возвращает либо имя хоста, либо IP адрес</returns>
+        public string GetHostNameByIp(string ipAddress)
+        {
+            try
+            {
+                IPHostEntry iPHostEntry = Dns.GetHostEntry(ipAddress);
+                if (iPHostEntry != null)
+                {
+                    return iPHostEntry.HostName;
+                }
+                else
+                {
+                    return ipAddress;
+                }
+            }
+            catch(SocketException ex) { }
+
+            return ipAddress;
+        }
+
+        /// <summary>
+        /// Метод, возвращающий строковый массив с именами хостов
+        /// </summary>
+        /// <param name="detectedAddresses">Лист с IP адресами доступных хостов</param>
+        /// <returns>В результате вычислений метод возвращает строковый массив с именами хостов</returns>
+        public string[] GetNamesArray(List<IPAddress> detectedAddresses)
+        {
+            string[] s = new string[detectedAddresses.Count];
+
+            for (int i = 0; i < detectedAddresses.Count; i++)
+            {
+                s[i] = GetHostNameByIp(detectedAddresses[i].ToString());
+            }
+
+            return s;
+        }
+
 
 
         /// <summary>
@@ -118,6 +171,7 @@ namespace TestEthernet.ViewModels
             string ipV4 = "";
             Host = Dns.GetHostName();
             Address = Dns.GetHostAddresses(Host);
+            Array.Resize<string>(ref addressData, address.Length);
 
             for (int i = 0; i < Address.Length; i++)
             {
@@ -147,12 +201,12 @@ namespace TestEthernet.ViewModels
             string[] parts = ipV4.Split('.');
             ipV4 = parts[0] + "." + parts[1] + "." + parts[2] + ".";
             int startAddress = 1;
-            int endAddress = 255;
+            int endAddress = 20;
 
             List<IPAddress> detectedAddresses = new List<IPAddress>();
             Ping ping = new Ping();
 
-            for(int addressPart = startAddress; addressPart<=endAddress; addressPart++)
+            for (int addressPart = startAddress; addressPart <= endAddress; addressPart++)
             {
                 string currentAddressAsString = $"{ipV4}{addressPart}";
                 IPAddress currentAddress = IPAddress.Parse(currentAddressAsString);
@@ -183,6 +237,7 @@ namespace TestEthernet.ViewModels
                 if (detectedAddresses.Count != 0)
                 {
                     IpListDescription = "Доступные IP адреса:";
+                    DetectedHosts = GetNamesArray(detectedAddresses);
                 }
                 else
                 {

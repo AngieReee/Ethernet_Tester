@@ -32,15 +32,38 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                     <TextBlock Text="{Binding Path=IpListDescription}"></TextBlock>
-                    <ListBox Grid.Column="0" ItemsSource="{Binding Path=DetectedAddresses}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <TextBlock Text="{Binding }"></TextBlock>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20"></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"></ColumnDefinition>
+                            <ColumnDefinition Width="250"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0">IP</TextBlock>
+                        <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=DetectedAddresses}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding }"></TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <TextBlock Grid.Row="0" Grid.Column="1">Имя</TextBlock>
+                        <ListBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Path=DetectedHosts}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding }"></TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+
+
                 </StackPanel>
 
                 <!--<ContentControl Grid.Column="1" Content="{Binding Path=Navigation.CurrentView}"></ContentControl>-->
