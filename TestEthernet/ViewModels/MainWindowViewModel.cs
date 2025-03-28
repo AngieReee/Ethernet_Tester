@@ -131,6 +131,13 @@ namespace TestEthernet.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
+
+
+        /// <summary>
+        /// Метод, вычисляющий MAC адрес по IP
+        /// </summary>
+        /// <param name="ipAddress">Текущий IP адрес для вычисления</param>
+        /// <returns>В зависимости от результатов вычисления метод возвращает либо MAC адрес, либо "Неопределено"</returns>
         public string GetMacAddress(string ipAddress)
         {
             string macAddress = string.Empty;
@@ -158,6 +165,11 @@ namespace TestEthernet.ViewModels
             }
         }
 
+        /// <summary>
+        /// Метод, возвращающий строковый массив с MAC адресами хостов
+        /// </summary>
+        /// <param name="detectedAddresses">Лист с IP адресами доступных хостов</param>
+        /// <returns>В результате вычислений метод возвращает строковый массив с MAC адресами хостов</returns>
         public string[] GetMacsArray(List<IPAddress> detectedAddresses)
         {
             string[] s = new string[detectedAddresses.Count];
