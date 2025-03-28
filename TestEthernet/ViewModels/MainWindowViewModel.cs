@@ -285,7 +285,9 @@ namespace TestEthernet.ViewModels
         }
 
 
-
+        /// <summary>
+        /// Метод, который выводит все данные о доступных интерфейсах сети
+        /// </summary>
         public void GetAllData()
         {
             DetectedAddresses = CheckCurrentNetwork(Ip);
