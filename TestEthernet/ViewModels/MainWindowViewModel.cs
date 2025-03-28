@@ -137,7 +137,11 @@ namespace TestEthernet.ViewModels
             return ipV4;
         }
 
-
+        /// <summary>
+        /// Метод, который выводит доступные IP адреса
+        /// </summary>
+        /// <param name="ipV4">IP адрес формата v4 текущего компьютера</param>
+        /// <returns></returns>
         public List<IPAddress> CheckCurrentNetwork(string ipV4)
         {
             string[] parts = ipV4.Split('.');
