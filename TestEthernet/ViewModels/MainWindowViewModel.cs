@@ -338,7 +338,10 @@ namespace TestEthernet.ViewModels
             return detectedAddresses;
         }
 
-
+        /// <summary>
+        /// Конструктор MainWindowViewModel
+        /// </summary>
+        /// <param name="navService">Навигация</param>
         public MainWindowViewModel(INavigationService navService)
         {
             Navigation = navService;
