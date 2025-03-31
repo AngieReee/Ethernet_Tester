@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:TestEthernet"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+
     <ScrollViewer>
         <StackPanel>
             <Grid>
@@ -15,7 +16,6 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0">
-                    <!--<Button Command="{Binding NavigateCurrentNetwork}">Туда</Button>-->
                     <TextBlock>Тут будет меню</TextBlock>
                 </StackPanel>
 
@@ -31,7 +31,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <TextBlock Text="{Binding Path=IpListDescription}"></TextBlock>
+
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="125"></ColumnDefinition>
@@ -44,13 +44,17 @@
                         <TextBlock Grid.Column="0" Text="Доступные IP адреса c"></TextBlock>
                         <TextBox Grid.Column="1" Width="90" Text="{Binding Path=StartAddress}"></TextBox>
                         <TextBlock Grid.Column="2" Text="по" HorizontalAlignment="Left"></TextBlock>
-                        <TextBox Grid.Column="3" Width="90" Text="{Binding Path=EndAddress}"></TextBox>
+                        <TextBox Grid.Column="3" Width="90" Text="{Binding Path=EndAddress, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBox.InputBindings>
+                                <KeyBinding Command="{Binding Path=AllOutput}" Key="Enter"></KeyBinding>
+                            </TextBox.InputBindings>
+                        </TextBox>
                         <Button Grid.Column="4" Margin="15 0 0 0" Command="{Binding Path=AllOutput}">Найти</Button>
                     </Grid>
 
+                    <TextBlock Text="{Binding Path=IpListDescription}"></TextBlock>
 
-
-                    <Grid>
+                    <Grid Visibility="{Binding IsVisible}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="20"></RowDefinition>
                             <RowDefinition></RowDefinition>

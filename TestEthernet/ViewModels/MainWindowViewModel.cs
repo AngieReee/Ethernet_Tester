@@ -23,6 +23,14 @@ namespace TestEthernet.ViewModels
 
         #region [Переменные и их свойства]
 
+        string isVisible = "Hidden";
+        public string IsVisible { get => isVisible; set
+            {
+                isVisible = value;
+                OnPropertyChanged(nameof(IsVisible));
+            }
+        }
+
         ICommand allOutput;
         public ICommand AllOutput
         {
@@ -299,11 +307,14 @@ namespace TestEthernet.ViewModels
                 IpListDescription = "";
                 DetectedHosts = GetNamesArray(detectedAddresses);
                 DetectedMacs = GetMacsArray(detectedAddresses);
-                CollectionViewSource.GetDefaultView(DetectedAddresses).Refresh();
+                IsVisible = "Visible";
             }
             else
             {
                 IpListDescription = "Нет доступных IP адресов";
+                DetectedHosts = null;
+                DetectedMacs = null;
+                IsVisible = "Hidden";
             }
         }
 
