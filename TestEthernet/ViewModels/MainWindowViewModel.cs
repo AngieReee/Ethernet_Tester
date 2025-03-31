@@ -10,6 +10,7 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using TestEthernet.Core;
 using TestEthernet.Services;
@@ -23,10 +24,11 @@ namespace TestEthernet.ViewModels
         #region [Переменные и их свойства]
 
         ICommand allOutput;
-        public ICommand AllOutput {
+        public ICommand AllOutput
+        {
             get
             {
-                if(allOutput == null)
+                if (allOutput == null)
                 {
                     allOutput = new RelayCommand(
                         x => this.GetAllData(),
@@ -49,7 +51,7 @@ namespace TestEthernet.ViewModels
             set
             {
                 startAddress = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(StartAddress));
             }
         }
 
@@ -60,12 +62,14 @@ namespace TestEthernet.ViewModels
             set
             {
                 endAddress = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(EndAddress));
             }
         }
 
         string ip;
-        public string Ip { get => ip;
+        public string Ip
+        {
+            get => ip;
             set
             {
                 ip = value;
@@ -80,7 +84,7 @@ namespace TestEthernet.ViewModels
             set
             {
                 detectedMacs = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(DetectedMacs));
             }
         }
 
@@ -91,7 +95,7 @@ namespace TestEthernet.ViewModels
             set
             {
                 detectedHosts = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(DetectedHosts));
             }
         }
 
@@ -102,7 +106,7 @@ namespace TestEthernet.ViewModels
             set
             {
                 detectedAddresses = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(DetectedAddresses));
             }
         }
 
@@ -161,10 +165,9 @@ namespace TestEthernet.ViewModels
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
         public event NetworkAvailabilityChangedEventHandler NetworkAvailabilityChanged;
 
-        private INavigationService _navigation;
+        /*private INavigationService _navigation;
 
         public INavigationService Navigation
         {
@@ -175,17 +178,9 @@ namespace TestEthernet.ViewModels
                 OnPropityChanged();
             }
 
-        }
+        }*/
 
         #endregion
-
-
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
-
 
         /// <summary>
         /// Метод, вычисляющий MAC адрес по IP
@@ -255,7 +250,7 @@ namespace TestEthernet.ViewModels
                     return ipAddress;
                 }
             }
-            catch(SocketException ex) { }
+            catch (SocketException ex) { }
 
             return ipAddress;
         }
@@ -319,7 +314,7 @@ namespace TestEthernet.ViewModels
                 IpListDescription = "";
                 DetectedHosts = GetNamesArray(detectedAddresses);
                 DetectedMacs = GetMacsArray(detectedAddresses);
-                
+                CollectionViewSource.GetDefaultView(DetectedAddresses).Refresh();
             }
             else
             {
@@ -368,9 +363,9 @@ namespace TestEthernet.ViewModels
         /// <param name="navService">Навигация</param>
         public MainWindowViewModel(INavigationService navService)
         {
-            Navigation = navService;
+            /*Navigation = navService;
             NavigateCurrentNetwork = new RelayCommand(execute: (object o) => { Navigation.NavigateTo<CurrentNetworkViewModel>(); },
-            canExecute: (object o) => true);
+            canExecute: (object o) => true);*/
 
             try
             {
