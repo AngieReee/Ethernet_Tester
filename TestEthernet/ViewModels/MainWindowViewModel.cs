@@ -23,8 +23,20 @@ namespace TestEthernet.ViewModels
 
         #region [Переменные и их свойства]
 
+        string exceptionText;
+        public string ExceptionText
+        {
+            get => exceptionText; set
+            {
+                exceptionText = value;
+                OnPropertyChanged(nameof(ExceptionText));
+            }
+        }
+
         string isVisible = "Hidden";
-        public string IsVisible { get => isVisible; set
+        public string IsVisible
+        {
+            get => isVisible; set
             {
                 isVisible = value;
                 OnPropertyChanged(nameof(IsVisible));
@@ -267,19 +279,27 @@ namespace TestEthernet.ViewModels
         /// </summary>
         public void GetAllData()
         {
-            DetectedAddresses = CheckCurrentNetwork(Ip);
-            if (detectedAddresses.Count != 0)
+            try
             {
-                IpListDescription = "";
-                IsVisible = "Visible";
+                DetectedAddresses = CheckCurrentNetwork(Ip);
+                if (DetectedAddresses.Count != 0)
+                {
+                    IpListDescription = "";
+                    IsVisible = "Visible";
+                }
+                else
+                {
+                    IpListDescription = "Нет доступных IP адресов";
+                    DetectedHosts = null;
+                    DetectedMacs = null;
+                    IsVisible = "Hidden";
+                }
             }
-            else
+            catch(NullReferenceException ex)
             {
-                IpListDescription = "Нет доступных IP адресов";
-                DetectedHosts = null;
-                DetectedMacs = null;
-                IsVisible = "Hidden";
+
             }
+
         }
 
         /// <summary>
@@ -289,32 +309,41 @@ namespace TestEthernet.ViewModels
         /// <returns></returns>
         public ObservableCollection<IPAddress> CheckCurrentNetwork(string ipV4)
         {
-            string[] startParts = StartAddress.Split('.');
-            int startAddress = Convert.ToInt32(startParts[3]);
-            string[] endParts = EndAddress.Split('.');
-            int endAddress = Convert.ToInt32(endParts[3]);
-            ObservableCollection<IPAddress> detectedAddresses = new ObservableCollection<IPAddress>();
-            ObservableCollection<string> detectedHosts = new ObservableCollection<string>();
-            ObservableCollection<string> detectedMacs = new ObservableCollection<string>();
-            Ping ping = new Ping();
-
-            for (int addressPart = startAddress; addressPart <= endAddress; addressPart++)
+            try
             {
-                string currentAddressAsString = $"{ipV4}{addressPart}";
-                IPAddress currentAddress = IPAddress.Parse(currentAddressAsString);
-                var pingResult = ping.Send(currentAddress, 2000);
-                Debug.WriteLine($"[{DateTime.Now}] {currentAddress}: {pingResult.Status}");
+                string[] startParts = StartAddress.Split('.');
+                int startAddress = Convert.ToInt32(startParts[3]);
+                string[] endParts = EndAddress.Split('.');
+                int endAddress = Convert.ToInt32(endParts[3]);
+                ObservableCollection<IPAddress> detectedAddresses = new ObservableCollection<IPAddress>();
+                ObservableCollection<string> detectedHosts = new ObservableCollection<string>();
+                ObservableCollection<string> detectedMacs = new ObservableCollection<string>();
+                Ping ping = new Ping();
 
-                if (pingResult.Status == IPStatus.Success)
+                for (int addressPart = startAddress; addressPart <= endAddress; addressPart++)
                 {
-                    detectedAddresses.Add(currentAddress);
-                    detectedHosts.Add(GetHostNameByIp(currentAddress.ToString()));
-                    detectedMacs.Add(GetMacAddress(currentAddress.ToString()));
+                    string currentAddressAsString = $"{ipV4}{addressPart}";
+                    IPAddress currentAddress = IPAddress.Parse(currentAddressAsString);
+                    var pingResult = ping.Send(currentAddress, 700);
+                    Debug.WriteLine($"[{DateTime.Now}] {currentAddress}: {pingResult.Status}");
+
+                    if (pingResult.Status == IPStatus.Success)
+                    {
+                        detectedAddresses.Add(currentAddress);
+                        detectedHosts.Add(GetHostNameByIp(currentAddress.ToString()));
+                        detectedMacs.Add(GetMacAddress(currentAddress.ToString()));
+                    }
                 }
+                DetectedHosts = detectedHosts;
+                DetectedMacs = detectedMacs;
+                return detectedAddresses;
             }
-            DetectedHosts = detectedHosts;
-            DetectedMacs = detectedMacs;
-            return detectedAddresses;
+            catch (Exception ex)
+            {
+                ExceptionText = ex.Message;
+                return detectedAddresses;
+            }
+
         }
 
         /// <summary>
