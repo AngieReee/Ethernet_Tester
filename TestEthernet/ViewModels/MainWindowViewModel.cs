@@ -210,23 +210,6 @@ namespace TestEthernet.ViewModels
         }
 
         /// <summary>
-        /// Метод, возвращающий строковый массив с MAC адресами хостов
-        /// </summary>
-        /// <param name="detectedAddresses">Лист с IP адресами доступных хостов</param>
-        /// <returns>В результате вычислений метод возвращает строковый массив с MAC адресами хостов</returns>
-        public ObservableCollection<string> GetMacsArray(ObservableCollection<IPAddress> detectedAddresses)
-        {
-            ObservableCollection<string> s = new ObservableCollection<string>(new string[detectedAddresses.Count]);
-
-            for (int i = 0; i < detectedAddresses.Count; i++)
-            {
-                s[i] = GetMacAddress(detectedAddresses[i].ToString());
-            }
-
-            return s;
-        }
-
-        /// <summary>
         /// Метод, вычисляющий имя хоста по IP адресу
         /// </summary>
         /// <param name="ipAddress">Текущий IP адрес для вычисления</param>
@@ -248,23 +231,6 @@ namespace TestEthernet.ViewModels
             catch (SocketException ex) { }
 
             return ipAddress;
-        }
-
-        /// <summary>
-        /// Метод, возвращающий строковый массив с именами хостов
-        /// </summary>
-        /// <param name="detectedAddresses">Лист с IP адресами доступных хостов</param>
-        /// <returns>В результате вычислений метод возвращает строковый массив с именами хостов</returns>
-        public ObservableCollection<string> GetNamesArray(ObservableCollection<IPAddress> detectedAddresses)
-        {
-            ObservableCollection<string> s = new ObservableCollection<string>(new string[detectedAddresses.Count]);
-
-            for (int i = 0; i < detectedAddresses.Count; i++)
-            {
-                s[i] = GetHostNameByIp(detectedAddresses[i].ToString());
-            }
-
-            return s;
         }
 
         /// <summary>
@@ -305,8 +271,6 @@ namespace TestEthernet.ViewModels
             if (detectedAddresses.Count != 0)
             {
                 IpListDescription = "";
-                DetectedHosts = GetNamesArray(detectedAddresses);
-                DetectedMacs = GetMacsArray(detectedAddresses);
                 IsVisible = "Visible";
             }
             else
@@ -329,10 +293,9 @@ namespace TestEthernet.ViewModels
             int startAddress = Convert.ToInt32(startParts[3]);
             string[] endParts = EndAddress.Split('.');
             int endAddress = Convert.ToInt32(endParts[3]);
-
-
-
             ObservableCollection<IPAddress> detectedAddresses = new ObservableCollection<IPAddress>();
+            ObservableCollection<string> detectedHosts = new ObservableCollection<string>();
+            ObservableCollection<string> detectedMacs = new ObservableCollection<string>();
             Ping ping = new Ping();
 
             for (int addressPart = startAddress; addressPart <= endAddress; addressPart++)
@@ -345,9 +308,12 @@ namespace TestEthernet.ViewModels
                 if (pingResult.Status == IPStatus.Success)
                 {
                     detectedAddresses.Add(currentAddress);
+                    detectedHosts.Add(GetHostNameByIp(currentAddress.ToString()));
+                    detectedMacs.Add(GetMacAddress(currentAddress.ToString()));
                 }
             }
-
+            DetectedHosts = detectedHosts;
+            DetectedMacs = detectedMacs;
             return detectedAddresses;
         }
 
