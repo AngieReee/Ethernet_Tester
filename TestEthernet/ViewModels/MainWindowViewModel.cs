@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using TestEthernet.Core;
 using TestEthernet.Services;
 using TestEthernet.Views;
@@ -18,6 +21,26 @@ namespace TestEthernet.ViewModels
     {
 
         #region [Переменные и их свойства]
+
+        ICommand allOutput;
+        public ICommand AllOutput {
+            get
+            {
+                if(allOutput == null)
+                {
+                    allOutput = new RelayCommand(
+                        x => this.GetAllData(),
+                        x => true);
+                }
+                return allOutput;
+            }
+            set
+            {
+                allOutput = value;
+                OnPropertyChanged();
+            }
+
+        }
 
         string startAddress;
         public string StartAddress
@@ -50,8 +73,8 @@ namespace TestEthernet.ViewModels
             }
         }
 
-        string[] detectedMacs;
-        public string[] DetectedMacs
+        ObservableCollection<string> detectedMacs;
+        public ObservableCollection<string> DetectedMacs
         {
             get => detectedMacs;
             set
@@ -61,8 +84,8 @@ namespace TestEthernet.ViewModels
             }
         }
 
-        string[] detectedHosts;
-        public string[] DetectedHosts
+        ObservableCollection<string> detectedHosts;
+        public ObservableCollection<string> DetectedHosts
         {
             get => detectedHosts;
             set
@@ -72,8 +95,8 @@ namespace TestEthernet.ViewModels
             }
         }
 
-        List<IPAddress> detectedAddresses;
-        public List<IPAddress> DetectedAddresses
+        ObservableCollection<IPAddress> detectedAddresses;
+        public ObservableCollection<IPAddress> DetectedAddresses
         {
             get => detectedAddresses;
             set
@@ -201,9 +224,9 @@ namespace TestEthernet.ViewModels
         /// </summary>
         /// <param name="detectedAddresses">Лист с IP адресами доступных хостов</param>
         /// <returns>В результате вычислений метод возвращает строковый массив с MAC адресами хостов</returns>
-        public string[] GetMacsArray(List<IPAddress> detectedAddresses)
+        public ObservableCollection<string> GetMacsArray(ObservableCollection<IPAddress> detectedAddresses)
         {
-            string[] s = new string[detectedAddresses.Count];
+            ObservableCollection<string> s = new ObservableCollection<string>(new string[detectedAddresses.Count]);
 
             for (int i = 0; i < detectedAddresses.Count; i++)
             {
@@ -242,9 +265,9 @@ namespace TestEthernet.ViewModels
         /// </summary>
         /// <param name="detectedAddresses">Лист с IP адресами доступных хостов</param>
         /// <returns>В результате вычислений метод возвращает строковый массив с именами хостов</returns>
-        public string[] GetNamesArray(List<IPAddress> detectedAddresses)
+        public ObservableCollection<string> GetNamesArray(ObservableCollection<IPAddress> detectedAddresses)
         {
-            string[] s = new string[detectedAddresses.Count];
+            ObservableCollection<string> s = new ObservableCollection<string>(new string[detectedAddresses.Count]);
 
             for (int i = 0; i < detectedAddresses.Count; i++)
             {
@@ -296,6 +319,7 @@ namespace TestEthernet.ViewModels
                 IpListDescription = "";
                 DetectedHosts = GetNamesArray(detectedAddresses);
                 DetectedMacs = GetMacsArray(detectedAddresses);
+                
             }
             else
             {
@@ -308,7 +332,7 @@ namespace TestEthernet.ViewModels
         /// </summary>
         /// <param name="ipV4">IP адрес формата v4 текущего компьютера</param>
         /// <returns></returns>
-        public List<IPAddress> CheckCurrentNetwork(string ipV4)
+        public ObservableCollection<IPAddress> CheckCurrentNetwork(string ipV4)
         {
             /*string[] parts = ipV4.Split('.');
             ipV4 = parts[0] + "." + parts[1] + "." + parts[2] + ".";
@@ -316,10 +340,10 @@ namespace TestEthernet.ViewModels
             StartAddress = ipV4;
             EndAddress = ipV4;*/
 
-            int startAddress = 1;
+            int startAddress = 5;
             int endAddress = 10;
 
-            List<IPAddress> detectedAddresses = new List<IPAddress>();
+            ObservableCollection<IPAddress> detectedAddresses = new ObservableCollection<IPAddress>();
             Ping ping = new Ping();
 
             for (int addressPart = startAddress; addressPart <= endAddress; addressPart++)

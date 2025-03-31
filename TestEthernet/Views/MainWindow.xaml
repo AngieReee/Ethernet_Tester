@@ -45,7 +45,7 @@
                         <TextBox Grid.Column="1" Width="90" Text="{Binding Path=StartAddress}"></TextBox>
                         <TextBlock Grid.Column="2" Text="по" HorizontalAlignment="Left"></TextBlock>
                         <TextBox Grid.Column="3" Width="90" Text="{Binding Path=EndAddress}"></TextBox>
-                        <Button Grid.Column="4" Margin="15 0 0 0" Command="{Binding Path=GetAllData}">Найти</Button>
+                        <Button Grid.Column="4" Margin="15 0 0 0" Command="{Binding Path=AllOutput}">Найти</Button>
                     </Grid>
 
 
@@ -62,8 +62,8 @@
                         </Grid.ColumnDefinitions>
                         
                         <TextBlock Grid.Row="0" Grid.Column="0">IP</TextBlock>
-                        
-                        <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=DetectedAddresses}">
+
+                        <ListBox Name="AddressesList" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=DetectedAddresses, UpdateSourceTrigger=PropertyChanged}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel>
@@ -74,7 +74,8 @@
                         </ListBox>
                         
                         <TextBlock Grid.Row="0" Grid.Column="1">Имя</TextBlock>
-                        <ListBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Path=DetectedHosts}">
+
+                        <ListBox x:Name="Hosts" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Path=DetectedHosts}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel>
@@ -86,7 +87,7 @@
                         
                         <TextBlock Grid.Row="0" Grid.Column="2">MAC адрес</TextBlock>
                         
-                        <ListBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding Path=DetectedMacs}">
+                        <ListBox x:Name="Macs" Grid.Row="1" Grid.Column="2" ItemsSource="{Binding Path=DetectedMacs}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel>
