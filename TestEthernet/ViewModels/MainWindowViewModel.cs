@@ -167,19 +167,6 @@ namespace TestEthernet.ViewModels
 
         public event NetworkAvailabilityChangedEventHandler NetworkAvailabilityChanged;
 
-        /*private INavigationService _navigation;
-
-        public INavigationService Navigation
-        {
-            get => _navigation;
-            set
-            {
-                _navigation = value;
-                OnPropityChanged();
-            }
-
-        }*/
-
         #endregion
 
         /// <summary>
@@ -272,8 +259,6 @@ namespace TestEthernet.ViewModels
             return s;
         }
 
-
-
         /// <summary>
         /// Метод, в котором считываются данные о текущем хосте
         /// </summary>
@@ -329,14 +314,12 @@ namespace TestEthernet.ViewModels
         /// <returns></returns>
         public ObservableCollection<IPAddress> CheckCurrentNetwork(string ipV4)
         {
-            /*string[] parts = ipV4.Split('.');
-            ipV4 = parts[0] + "." + parts[1] + "." + parts[2] + ".";
+            string[] startParts = StartAddress.Split('.');
+            int startAddress = Convert.ToInt32(startParts[3]);
+            string[] endParts = EndAddress.Split('.');
+            int endAddress = Convert.ToInt32(endParts[3]);
 
-            StartAddress = ipV4;
-            EndAddress = ipV4;*/
 
-            int startAddress = 5;
-            int endAddress = 10;
 
             ObservableCollection<IPAddress> detectedAddresses = new ObservableCollection<IPAddress>();
             Ping ping = new Ping();
