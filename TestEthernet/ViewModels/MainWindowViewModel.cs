@@ -47,7 +47,7 @@ namespace TestEthernet.ViewModels
             set
             {
                 allOutput = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(AllOutput));
             }
 
         }
@@ -81,7 +81,7 @@ namespace TestEthernet.ViewModels
             set
             {
                 ip = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(Ip));
             }
         }
 
@@ -125,7 +125,7 @@ namespace TestEthernet.ViewModels
             set
             {
                 outputDescription = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(OutputDescription));
             }
         }
 
@@ -136,7 +136,7 @@ namespace TestEthernet.ViewModels
             set
             {
                 ipListDescription = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(IpListDescription));
             }
         }
 
@@ -147,7 +147,7 @@ namespace TestEthernet.ViewModels
             set
             {
                 addressData = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(AddressData));
             }
         }
 
@@ -158,7 +158,7 @@ namespace TestEthernet.ViewModels
             set
             {
                 host = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(Host));
             }
         }
 
@@ -169,7 +169,7 @@ namespace TestEthernet.ViewModels
             set
             {
                 address = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(Address));
             }
         }
 
@@ -339,7 +339,7 @@ namespace TestEthernet.ViewModels
             {
                 string currentAddressAsString = $"{ipV4}{addressPart}";
                 IPAddress currentAddress = IPAddress.Parse(currentAddressAsString);
-                var pingResult = ping.Send(currentAddress, 700);
+                var pingResult = ping.Send(currentAddress, 2000);
                 Debug.WriteLine($"[{DateTime.Now}] {currentAddress}: {pingResult.Status}");
 
                 if (pingResult.Status == IPStatus.Success)
@@ -357,9 +357,6 @@ namespace TestEthernet.ViewModels
         /// <param name="navService">Навигация</param>
         public MainWindowViewModel(INavigationService navService)
         {
-            /*Navigation = navService;
-            NavigateCurrentNetwork = new RelayCommand(execute: (object o) => { Navigation.NavigateTo<CurrentNetworkViewModel>(); },
-            canExecute: (object o) => true);*/
 
             try
             {
