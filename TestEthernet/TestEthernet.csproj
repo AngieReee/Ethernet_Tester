@@ -111,6 +111,7 @@
     <Compile Include="Core\ObservableObject.cs" />
     <Compile Include="Core\RelayCommand.cs" />
     <Compile Include="Core\ViewModel.cs" />
+    <Compile Include="Models\IPs.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="ViewModels\CurrentNetworkViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
@@ -149,9 +150,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
       <Visible>False</Visible>

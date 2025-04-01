@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using TestEthernet.Core;
+using TestEthernet.Models;
 using TestEthernet.Services;
 using TestEthernet.Views;
 
@@ -22,6 +23,28 @@ namespace TestEthernet.ViewModels
     {
 
         #region [Переменные и их свойства]
+
+        int startPort = IPEndPoint.MinPort;
+        public int StartPort
+        {
+            get => startPort;
+            set
+            {
+                startPort = value;
+                OnPropertyChanged(nameof(StartPort));
+            }
+        }
+
+        int endPort = IPEndPoint.MaxPort;
+        public int EndPort
+        {
+            get => endPort;
+            set
+            {
+                endPort = value;
+                OnPropertyChanged(nameof(EndPort));
+            }
+        }
 
         string exceptionText;
         public string ExceptionText
@@ -61,7 +84,37 @@ namespace TestEthernet.ViewModels
                 allOutput = value;
                 OnPropertyChanged(nameof(AllOutput));
             }
+        }
 
+        ICommand ports;
+        public ICommand Ports
+        {
+            get
+            {
+                if (ports == null)
+                {
+                    ports = new RelayCommand(
+                        x => this.GetPorts(CurIp),
+                        x => true);
+                }
+                return ports;
+            }
+            set
+            {
+                ports = value;
+                OnPropertyChanged(nameof(Ports));
+            }
+        }
+
+        IPs curIp;
+        public IPs CurIp
+        {
+            get => curIp;
+            set
+            {
+                curIp = value;
+                OnPropertyChanged(nameof(CurIp));
+            }
         }
 
         string startAddress;
@@ -119,8 +172,8 @@ namespace TestEthernet.ViewModels
             }
         }
 
-        ObservableCollection<IPAddress> detectedAddresses;
-        public ObservableCollection<IPAddress> DetectedAddresses
+        ObservableCollection<IPs> detectedAddresses;
+        public ObservableCollection<IPs> DetectedAddresses
         {
             get => detectedAddresses;
             set
@@ -286,6 +339,7 @@ namespace TestEthernet.ViewModels
                 {
                     IpListDescription = "";
                     IsVisible = "Visible";
+                    /*GetPorts();*/
                 }
                 else
                 {
@@ -295,9 +349,9 @@ namespace TestEthernet.ViewModels
                     IsVisible = "Hidden";
                 }
             }
-            catch(NullReferenceException ex)
+            catch (NullReferenceException ex)
             {
-
+                ExceptionText = ex.Message;
             }
 
         }
@@ -307,7 +361,7 @@ namespace TestEthernet.ViewModels
         /// </summary>
         /// <param name="ipV4">IP адрес формата v4 текущего компьютера</param>
         /// <returns></returns>
-        public ObservableCollection<IPAddress> CheckCurrentNetwork(string ipV4)
+        public ObservableCollection<IPs> CheckCurrentNetwork(string ipV4)
         {
             try
             {
@@ -315,7 +369,7 @@ namespace TestEthernet.ViewModels
                 int startAddress = Convert.ToInt32(startParts[3]);
                 string[] endParts = EndAddress.Split('.');
                 int endAddress = Convert.ToInt32(endParts[3]);
-                ObservableCollection<IPAddress> detectedAddresses = new ObservableCollection<IPAddress>();
+                ObservableCollection<IPs> detectedAddresses = new ObservableCollection<IPs>();
                 ObservableCollection<string> detectedHosts = new ObservableCollection<string>();
                 ObservableCollection<string> detectedMacs = new ObservableCollection<string>();
                 Ping ping = new Ping();
@@ -329,7 +383,8 @@ namespace TestEthernet.ViewModels
 
                     if (pingResult.Status == IPStatus.Success)
                     {
-                        detectedAddresses.Add(currentAddress);
+                        IPs ipModel = new IPs { Ip = currentAddress.ToString(), FamilyIp = currentAddress.AddressFamily.ToString() };
+                        detectedAddresses.Add(ipModel);
                         detectedHosts.Add(GetHostNameByIp(currentAddress.ToString()));
                         detectedMacs.Add(GetMacAddress(currentAddress.ToString()));
                     }
@@ -344,6 +399,29 @@ namespace TestEthernet.ViewModels
                 return detectedAddresses;
             }
 
+        }
+
+        public void GetPorts(IPs ip)
+        {
+            for (int currentPort = StartPort; currentPort <= EndPort; currentPort++)
+            {
+                try
+                {
+                    using (var client = new TcpClient())
+                    {
+                        client.Connect(ip.Ip, currentPort);
+                        if (client.Connected)
+                        {
+                            var stream = client.GetStream();
+                            Debug.WriteLine(ip.Ip + " " + currentPort);
+                        }
+                    }
+                }
+                catch (SocketException ex)
+                {
+                    ExceptionText = ex.Message;
+                }
+            }
         }
 
         /// <summary>
@@ -368,7 +446,5 @@ namespace TestEthernet.ViewModels
                 OutputDescription = "Ошибка подключения сети";
             }
         }
-
-        public RelayCommand NavigateCurrentNetwork { get; set; }
     }
 }

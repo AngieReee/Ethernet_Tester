@@ -73,14 +73,19 @@
                         
                         <TextBlock Grid.Row="0" Grid.Column="0">IP</TextBlock>
 
-                        <ListBox Name="AddressesList" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=DetectedAddresses, UpdateSourceTrigger=PropertyChanged}">
+                        <ListBox Name="AddressesList" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=DetectedAddresses, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding CurIp}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel>
-                                        <TextBlock Text="{Binding }"></TextBlock>
+                                        <TextBlock Text="{Binding Ip}"></TextBlock>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
+                            <ListBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Передать данные" Command="{Binding Ports}" CommandParameter="{Binding CurIp}"></MenuItem>
+                                </ContextMenu>
+                            </ListBox.ContextMenu>
                         </ListBox>
                         
                         <TextBlock Grid.Row="0" Grid.Column="1">Имя</TextBlock>
@@ -93,6 +98,11 @@
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
+                            <ListBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Передать данные"></MenuItem>
+                                </ContextMenu>
+                            </ListBox.ContextMenu>
                         </ListBox>
                         
                         <TextBlock Grid.Row="0" Grid.Column="2">MAC адрес</TextBlock>
@@ -105,6 +115,11 @@
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
+                            <ListBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Передать данные"></MenuItem>
+                                </ContextMenu>
+                            </ListBox.ContextMenu>
                         </ListBox>
                     </Grid>
 
