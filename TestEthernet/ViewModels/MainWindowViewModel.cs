@@ -415,46 +415,56 @@ namespace TestEthernet.ViewModels
 
         public void GetPorts(IPs ip)
         {
-            int mainPort = 0;
-            var task = new Task[EndPort - StartPort + 1];
-            for (int i = 0; i <= EndPort - StartPort; i++)
+            var freePorts = GetFreePorts(ip.Ip);
+
+            foreach (var port in freePorts)
             {
-                int currentPort = StartPort + i + 1;
-                task[currentPort - 1] = Task.Run(() =>
-                {
-                    CheckPort(ip.Ip, currentPort, ref mainPort);
-                });
-                if (mainPort != 0)
-                {
-                    break;
-                }
+                Debug.WriteLine($"Порт {port} свободен для {ip.Ip}");
             }
         }
 
-        public void CheckPort(string ip, int port, ref int mainPort)
+        static List<int> GetFreePorts(string ipAddress)
+        {
+            var freePorts = new List<int>();
+            var ip = IPAddress.Parse(ipAddress);
+
+            Parallel.For(5000, 5900, port =>
+            {
+                if (IsPortFree(ip, port))
+                {
+                    lock (freePorts)
+                    {
+                        freePorts.Add(port);
+                    }
+                }
+            });
+            return freePorts;
+        }
+
+        static bool IsPortFree(IPAddress ipAddress, int port)
         {
             try
             {
-                using (var client = new TcpClient())
+                using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
                 {
-                    client.SendTimeout = 500;
-                    client.ReceiveTimeout = 500;
-                    client.Connect(ip, port);
-                    if (client.Connected)
+                    var endPoint = new IPEndPoint(ipAddress, port);
+                    var result = socket.BeginConnect(endPoint, null, null);
+                    if (result.AsyncWaitHandle.WaitOne(TimeSpan.FromMilliseconds(700)))
                     {
-                        var stream = client.GetStream();
-                        Debug.WriteLine(ip + " " + port);
-                        mainPort = port;
+                        socket.EndConnect(result);
+                        Debug.WriteLine($"{ipAddress}:{port}");
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
                     }
                 }
             }
-            catch (SocketException ex)
-            {
-                ExceptionText = ex.Message;
-            }
             catch (Exception ex)
             {
-
+                Debug.WriteLine($"Ошибка при проверке порта {port}: {ex.Message}");
+                return false;
             }
         }
 
