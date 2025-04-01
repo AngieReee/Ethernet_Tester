@@ -111,7 +111,9 @@
     <Compile Include="Core\ObservableObject.cs" />
     <Compile Include="Core\RelayCommand.cs" />
     <Compile Include="Core\ViewModel.cs" />
+    <Compile Include="Models\Crc16.cs" />
     <Compile Include="Models\IPs.cs" />
+    <Compile Include="Services\ClientService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="ViewModels\CurrentNetworkViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />

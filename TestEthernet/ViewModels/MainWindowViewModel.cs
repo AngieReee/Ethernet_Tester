@@ -25,17 +25,6 @@ namespace TestEthernet.ViewModels
 
         #region [Переменные и их свойства]
 
-        /*ObservableCollection<int> portsCollection;
-        public ObservableCollection<int> PortsCollection
-        {
-            get => portsCollection;
-            set
-            {
-                portsCollection = value;
-                OnPropertyChanged(nameof(PortsCollection));
-            }
-        }*/
-
         int startPort = IPEndPoint.MinPort;
         public int StartPort
         {
