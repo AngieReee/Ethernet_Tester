@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -24,6 +25,17 @@ namespace TestEthernet.ViewModels
 
         #region [Переменные и их свойства]
 
+        /*ObservableCollection<int> portsCollection;
+        public ObservableCollection<int> PortsCollection
+        {
+            get => portsCollection;
+            set
+            {
+                portsCollection = value;
+                OnPropertyChanged(nameof(PortsCollection));
+            }
+        }*/
+
         int startPort = IPEndPoint.MinPort;
         public int StartPort
         {
@@ -35,7 +47,7 @@ namespace TestEthernet.ViewModels
             }
         }
 
-        int endPort = IPEndPoint.MaxPort;
+        int endPort = 2000;
         public int EndPort
         {
             get => endPort;
@@ -403,24 +415,46 @@ namespace TestEthernet.ViewModels
 
         public void GetPorts(IPs ip)
         {
-            for (int currentPort = StartPort; currentPort <= EndPort; currentPort++)
+            int mainPort = 0;
+            var task = new Task[EndPort - StartPort + 1];
+            for (int i = 0; i <= EndPort - StartPort; i++)
             {
-                try
+                int currentPort = StartPort + i + 1;
+                task[currentPort - 1] = Task.Run(() =>
                 {
-                    using (var client = new TcpClient())
+                    CheckPort(ip.Ip, currentPort, ref mainPort);
+                });
+                if (mainPort != 0)
+                {
+                    break;
+                }
+            }
+        }
+
+        public void CheckPort(string ip, int port, ref int mainPort)
+        {
+            try
+            {
+                using (var client = new TcpClient())
+                {
+                    client.SendTimeout = 500;
+                    client.ReceiveTimeout = 500;
+                    client.Connect(ip, port);
+                    if (client.Connected)
                     {
-                        client.Connect(ip.Ip, currentPort);
-                        if (client.Connected)
-                        {
-                            var stream = client.GetStream();
-                            Debug.WriteLine(ip.Ip + " " + currentPort);
-                        }
+                        var stream = client.GetStream();
+                        Debug.WriteLine(ip + " " + port);
+                        mainPort = port;
                     }
                 }
-                catch (SocketException ex)
-                {
-                    ExceptionText = ex.Message;
-                }
+            }
+            catch (SocketException ex)
+            {
+                ExceptionText = ex.Message;
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 
