@@ -34,6 +34,15 @@ namespace TestEthernet.Services
             }
         }
 
+        bool connectionStatus;
+        public bool ConnectionStatus { get => connectionStatus;
+            set
+            { 
+                connectionStatus = value;
+                OnPropertyChanged(nameof(ConnectionStatus));
+            }
+        }
+
         public async void Connect(string ip)
         {
             try
@@ -42,10 +51,12 @@ namespace TestEthernet.Services
                 await client.ConnectAsync(IPAddress.Parse(ip), 8080);
                 stream = client.GetStream();
                 Debug.WriteLine("Подключено");
+                ConnectionStatus = true;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+                ConnectionStatus = false;
             }
         }
 
@@ -56,6 +67,16 @@ namespace TestEthernet.Services
                 var message = text;
                 var data = Encoding.UTF8.GetBytes(message);
                 await stream.WriteAsync(data, 0, data.Length);
+
+                var buffer = new byte[1024];
+                int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+                var checkData = buffer.Take(bytesRead - 2).ToArray();
+                var receivedCrc = BitConverter.ToUInt16(buffer, bytesRead - 2);
+
+                if (Crc16.Calculate(data) == receivedCrc)
+                {
+                    Debug.WriteLine("Данные не повреждены.");
+                }
                 Debug.WriteLine($"Вы: {message}");
             }
             catch (Exception ex)
