@@ -25,13 +25,7 @@ namespace TestEthernet
                 DataContext = provider.GetRequiredService<MainWindowViewModel>()
             });
 
-            services.AddSingleton<CurrentNetworkView>(provider => new CurrentNetworkView
-            {
-                DataContext = provider.GetRequiredService<CurrentNetworkViewModel>()
-            });
-
             services.AddSingleton<MainWindowViewModel>();
-            services.AddSingleton<CurrentNetworkViewModel>();
             services.AddSingleton<INavigationService, NavigationService>();
 
             services.AddSingleton<Func<Type, ViewModel>>(serviceProvider => viewModelType

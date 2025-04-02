@@ -25,6 +25,28 @@ namespace TestEthernet.ViewModels
 
         #region [Переменные и их свойства]
 
+        string connectionStatus;
+        public string ConnectionStatus
+        {
+            get => connectionStatus;
+            set
+            {
+                connectionStatus = value;
+                OnPropertyChanged(nameof(ConnectionStatus));
+            }
+        }
+
+        bool connection;
+        public bool Connection
+        {
+            get => connection;
+            set
+            {
+                connection = value;
+                OnPropertyChanged(nameof(Connection));
+            }
+        }
+
         int startPort = IPEndPoint.MinPort;
         public int StartPort
         {
@@ -340,7 +362,6 @@ namespace TestEthernet.ViewModels
                 {
                     IpListDescription = "";
                     IsVisible = "Visible";
-                    /*GetPorts();*/
                 }
                 else
                 {
@@ -402,22 +423,30 @@ namespace TestEthernet.ViewModels
 
         }
 
+        public void ConnectTo(string ip, ObservableCollection<int> port)
+        {
+            ClientService client = new ClientService();
+            client.Connect(ip);
+        }
+
         public void GetPorts(IPs ip)
         {
-            var freePorts = GetFreePorts(ip.Ip);
+            ObservableCollection<int> freePorts = GetFreePorts(ip.Ip);
 
             foreach (var port in freePorts)
             {
                 Debug.WriteLine($"Порт {port} свободен для {ip.Ip}");
             }
+
+            ConnectTo(ip.Ip.ToString(), freePorts);
         }
 
-        static List<int> GetFreePorts(string ipAddress)
+        static ObservableCollection<int> GetFreePorts(string ipAddress)
         {
-            var freePorts = new List<int>();
-            var ip = IPAddress.Parse(ipAddress);
+            ObservableCollection<int> freePorts = new ObservableCollection<int>();
+            IPAddress ip = IPAddress.Parse(ipAddress);
 
-            Parallel.For(5000, 5900, port =>
+            Parallel.For(100, 150, port =>
             {
                 if (IsPortFree(ip, port))
                 {

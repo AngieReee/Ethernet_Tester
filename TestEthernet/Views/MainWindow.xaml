@@ -11,15 +11,11 @@
         <StackPanel>
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="600"></ColumnDefinition>
                     <ColumnDefinition Width="100"></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0">
-                    <TextBlock>Тут будет меню</TextBlock>
-                </StackPanel>
-
-                <StackPanel Grid.Column="1">
                     <TextBlock Text="{Binding StringFormat=Имя хоста: {0}, Path=Host}"></TextBlock>
                     <TextBlock Text="{Binding Path=OutputDescription}"></TextBlock>
                     <ListBox ItemsSource="{Binding Path=AddressData}">
@@ -53,7 +49,7 @@
                                 <KeyBinding Command="{Binding Path=AllOutput}" Key="Enter"></KeyBinding>
                             </TextBox.InputBindings>
                         </TextBox>
-                        <Button Grid.Column="4" Margin="15 0 0 0" Command="{Binding Path=AllOutput}">Найти</Button>
+                        <Button Grid.Column="4" Margin="15 0 0 0" Width="150" Command="{Binding Path=AllOutput}">Найти</Button>
                     </Grid>
 
                     <TextBlock Text="{Binding Path=ExceptionText}"></TextBlock>
@@ -70,7 +66,7 @@
                             <ColumnDefinition Width="250"></ColumnDefinition>
                             <ColumnDefinition Width="250"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        
+
                         <TextBlock Grid.Row="0" Grid.Column="0">IP</TextBlock>
 
                         <ListBox Name="AddressesList" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=DetectedAddresses, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding CurIp}">
@@ -87,7 +83,7 @@
                                 </ContextMenu>
                             </ListBox.ContextMenu>
                         </ListBox>
-                        
+
                         <TextBlock Grid.Row="0" Grid.Column="1">Имя</TextBlock>
 
                         <ListBox x:Name="Hosts" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Path=DetectedHosts}">
@@ -104,9 +100,9 @@
                                 </ContextMenu>
                             </ListBox.ContextMenu>
                         </ListBox>
-                        
+
                         <TextBlock Grid.Row="0" Grid.Column="2">MAC адрес</TextBlock>
-                        
+
                         <ListBox x:Name="Macs" Grid.Row="1" Grid.Column="2" ItemsSource="{Binding Path=DetectedMacs}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
@@ -122,11 +118,11 @@
                             </ListBox.ContextMenu>
                         </ListBox>
                     </Grid>
-
-
                 </StackPanel>
 
-                <!--<ContentControl Grid.Column="1" Content="{Binding Path=Navigation.CurrentView}"></ContentControl>-->
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="{Binding Path=ConnectionStatus}"></TextBlock>
+                </StackPanel>
 
             </Grid>
         </StackPanel>

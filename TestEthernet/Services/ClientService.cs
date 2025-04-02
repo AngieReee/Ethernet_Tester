@@ -1,63 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using TestEthernet.Models;
 using TestEthernet.Core;
-using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace TestEthernet.Services
 {
     public class ClientService : ViewModel
     {
-        private TcpClient _client;
-        private NetworkStream _stream;
-        private bool _isConnected;
-
-        // Свойство с уведомлением об изменении
-        public bool IsConnected
+        TcpClient client;
+        public TcpClient Client
         {
-            get => _isConnected;
-            private set
+            get => client;
+            set
             {
-                if (_isConnected != value)
-                {
-                    _isConnected = value;
-                    OnPropertyChanged(nameof(IsConnected));
-                }
+                client = value;
+                OnPropertyChanged(nameof(Client));
             }
         }
 
-        // Метод для подключения
-        public async Task ConnectAsync(string ip, int port)
-        {
-            _client = new TcpClient();
-            await _client.ConnectAsync(IPAddress.Parse(ip), port);
-            _stream = _client.GetStream();
-            IsConnected = true; // Обновляем состояние подключения
+        NetworkStream stream;
+        public NetworkStream Stream { get => stream;
+            set
+            {
+                stream = value;
+                OnPropertyChanged(nameof(Stream));
+            }
         }
 
-        // Метод для отправки данных
-        public async Task SendDataAsync(byte[] data)
+        public async void Connect(string ip)
         {
-            if (!IsConnected) throw new InvalidOperationException("Не подключено");
-
-            var crc = Crc16.Calculate(data);
-            var packet = data.Concat(BitConverter.GetBytes(crc)).ToArray();
-
-            await _stream.WriteAsync(packet, 0, packet.Length);
+            try
+            {
+                client = new TcpClient();
+                await client.ConnectAsync(IPAddress.Parse(ip), 8080);
+                stream = client.GetStream();
+                Debug.WriteLine("Подключено");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
-        // Метод для отключения
-        public void Disconnect()
+        public async void Send(string text)
         {
-            _stream?.Close();
-            _client?.Close();
-            IsConnected = false; // Обновляем состояние подключения
+            try
+            {
+                var message = text;
+                var data = Encoding.UTF8.GetBytes(message);
+                await stream.WriteAsync(data, 0, data.Length);
+                Debug.WriteLine($"Вы: {message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
+
     }
 }
